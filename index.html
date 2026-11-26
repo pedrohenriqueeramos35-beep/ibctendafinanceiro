@@ -276,7 +276,7 @@ rs();
 
 function cnt(){const st=$('#view')&&$('#view').classList.contains('still');document.querySelectorAll('[data-n]').forEach(el=>{const v=+el.dataset.n,t0=performance.now(),n=el.dataset.k=='n';const f=t=>{const p=st?1:Math.min(1,(t-t0)/900),x=v*(1-Math.pow(1-p,3));el.innerHTML=n?Math.round(x):big(x);p<1&&requestAnimationFrame(f)};f(t0)});document.querySelectorAll('.bars b').forEach((b,i)=>{b.title+=' · clique para baixar o PDF do dia';b.onclick=()=>dayPdf(i+1)})}
 /* ===== Netlify + Supabase ===== */
-const SB_URL='https://axwogbwdympawmdrybvo.supabase.co/rest/v1/',SB_KEY='sb_publishable_iCFao707OMJosUqcvZfahQ_7QAVyQTg';
+const SB_URL='https://axwogbwdympawmdrybvo.supabase.co',SB_KEY='sb_publishable_iCFao707OMJosUqcvZfahQ_7QAVyQTg';
 const OK_CFG=!SB_URL.startsWith('COLE')&&!SB_KEY.startsWith('COLE');
 const sb=OK_CFG?supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
 const claude={use:async n=>{if(n=='downloads')return{save:async({filename,data})=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/pdf'}));a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}};throw new Error('indisponivel')}};
