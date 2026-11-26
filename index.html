@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>IBC Tenda · Gestão Financeira</title><meta name=robots content=noindex>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;600;800&display=block" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&family=Pacifico&family=Caveat:wght@600&family=Satisfy&family=Homemade+Apple&display=block" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Great+Vibes&family=Pacifico&family=Caveat:wght@600&family=Satisfy&family=Homemade+Apple&display=block" rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
 :root{--bg:#ececee;--c:#f6f6f7;--i:#1c2230;--m:#8a8f9a;--g:#6ee787;--gt:#1c9c52;--ln:#dcdde2;--dk:#1c2230;--red:#e5484d;--r:22px;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -276,7 +276,7 @@ rs();
 
 function cnt(){const st=$('#view')&&$('#view').classList.contains('still');document.querySelectorAll('[data-n]').forEach(el=>{const v=+el.dataset.n,t0=performance.now(),n=el.dataset.k=='n';const f=t=>{const p=st?1:Math.min(1,(t-t0)/900),x=v*(1-Math.pow(1-p,3));el.innerHTML=n?Math.round(x):big(x);p<1&&requestAnimationFrame(f)};f(t0)});document.querySelectorAll('.bars b').forEach((b,i)=>{b.title+=' · clique para baixar o PDF do dia';b.onclick=()=>dayPdf(i+1)})}
 /* ===== Netlify + Supabase ===== */
-const SB_URL='https://axwogbwdympawmdrybvo.supabase.co/rest/v1/',SB_KEY='sb_publishable_iCFao707OMJosUqcvZfahQ_7QAVyQTg';
+const SB_URL='COLE_AQUI_A_URL_DO_SUPABASE',SB_KEY='sb_publishable_iCFao707OMJosUqcvZfahQ_7QAVyQTg';
 const OK_CFG=!SB_URL.startsWith('COLE')&&!SB_KEY.startsWith('COLE');
 const sb=OK_CFG?supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true}}):null;
 const claude={use:async n=>{if(n=='downloads')return{save:async({filename,data})=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/pdf'}));a.download=filename;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}};throw new Error('indisponivel')}};
@@ -288,7 +288,7 @@ const blank=()=>{const s=def();s.contas=[];s.ent=[];s.sai=[];return s};
 async function pull(){const{data,error}=await sb.from('app_state').select('j').eq('id','main').maybeSingle();if(error){toast('Erro ao carregar os dados');return false}if(data&&data.j){if(data.j===JSON.stringify(S))return false;S=JSON.parse(data.j);return true}S=blank();await push();return true}
 function login(){return`<div class=lg><div class="lc card"><div class=lgo><img src="${LOGO}" alt="IBC Tenda"></div><h1>Gestão <b>financeira</b></h1><div class=mut>Acesso restrito à liderança</div><label>${ic('user',18)}<input id=lu type=email placeholder=E-mail autocomplete=username></label><label>${ic('lock',18)}<input id=lp type=password placeholder=Senha autocomplete=current-password></label><div id=le class=err></div><button class=pri onclick=doLogin()>Entrar ${ic('chev',16)}</button></div></div>`}
 async function doLogin(){const er=t=>{$('#le').textContent=t;const c=$('.lc');c.classList.remove('shake');void c.offsetWidth;c.classList.add('shake')};$('#le').textContent='Entrando...';
- const{error}=await sb.auth.signInWithPassword({email:$('#lu').value.trim(),password:$('#lp').value});if(error){await new Promise(r=>setTimeout(r,700));return er('E-mail ou senha incorretos')}
+ const{error}=await sb.auth.signInWithPassword({email:$('#lu').value.trim(),password:$('#lp').value});if(error){await new Promise(r=>setTimeout(r,700));return er(/invalid login/i.test(error.message)?'E-mail ou senha incorretos':'Erro: '+error.message)}
  sess=true;await pull();LT='';rs();render()}
 async function logout(){try{await sb.auth.signOut()}catch{}sess=false;foc=false;S=blank();render()}
 function chPass(){form('Alterar senha',[{k:'p',l:'Nova senha (mín. 10 caracteres, letras e números)',t:'password'}],{},async v=>{const p=v.p;if(p.length<10||!/[a-zA-Z]/.test(p)||!/\d/.test(p))return toast('Use 10+ caracteres com letras e números');const{error}=await sb.auth.updateUser({password:p});toast(error?'Não foi possível alterar':'Senha alterada')})}
